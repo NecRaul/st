@@ -2,11 +2,13 @@
 
 /*
  * appearance
- *
  * font: see http://freedesktop.org/software/fontconfig/fontconfig-user.html
  */
-static char *font = "HackNerdFontMono:pixelsize=10:antialias=true:autohint=true";
-static char *font2[] = {"HackNerdFontMono:size=10"};
+static char *font = "HackNerdFontMono:size=10";
+static char *font2[] = {
+    "HackNerdFontMono:size=10",
+    "monospace:size=10",
+    "NotoColorEmoji:pixelsize=8:antialias=true:autohint=true"};
 static int borderpx = 2;
 
 /*
@@ -536,3 +538,4 @@ static char ascii_printable[] =
     " !\"#$%&'()*+,-./0123456789:;<=>?"
     "@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_"
     "`abcdefghijklmnopqrstuvwxyz{|}~";
+
