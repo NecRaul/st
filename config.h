@@ -89,10 +89,7 @@ const int boxdraw_braille = 0;
 static int bellvolume = 0;
 
 /* default TERM value */
-#ifndef TERMNAME
-#define TERMNAME "st-256color"
-#endif
-char *termname = TERMNAME;
+char *termname = "st-256color";
 
 /*
  * spaces per tab

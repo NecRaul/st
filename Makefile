@@ -7,7 +7,7 @@ include config.mk
 SRC = st.c x.c boxdraw.c hb.c
 OBJ = $(SRC:.c=.o)
 
-all: options st st-xterm
+all: options st
 
 options:
 	@echo st build options:
@@ -16,24 +16,20 @@ options:
 	@echo "CC      = $(CC)"
 
 .c.o:
-	$(CC) $(STCFLAGS) -c $< -o $@
-
-%-xterm.o: %.c
-	$(CC) $(STCFLAGS) -DTERMNAME=\"xterm-256color\" -c $< -o $@
+	$(CC) $(STCFLAGS) -c $<
 
 st.o: config.h st.h win.h
 x.o: arg.h config.h st.h win.h hb.h
 hb.o: st.h
 boxdraw.o: config.h st.h boxdraw_data.h
 
-st: $(OBJ)
-	$(CC) -o $@ $^ $(STLDFLAGS)
+$(OBJ): config.h config.mk
 
-st-xterm: $(OBJ:.o=-xterm.o)
-	$(CC) -o $@ $^ $(STLDFLAGS)
+st: $(OBJ)
+	$(CC) -o $@ $(OBJ) $(STLDFLAGS)
 
 clean:
-	rm -f st st-xterm *.o *-xterm.o st-$(VERSION).tar.gz *.rej *.orig
+	rm -f st $(OBJ) st-$(VERSION).tar.gz *.rej *.orig *.o
 
 dist: clean
 	mkdir -p st-$(VERSION)
@@ -43,14 +39,12 @@ dist: clean
 	tar -cf - st-$(VERSION) | gzip > st-$(VERSION).tar.gz
 	rm -rf st-$(VERSION)
 
-install: st st-xterm
+install: st
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
 	cp -f st $(DESTDIR)$(PREFIX)/bin
-	cp -f st-xterm $(DESTDIR)$(PREFIX)/bin
 	cp -f st-copyout $(DESTDIR)$(PREFIX)/bin
 	cp -f st-urlhandler $(DESTDIR)$(PREFIX)/bin
 	chmod 755 $(DESTDIR)$(PREFIX)/bin/st
-	chmod 755 $(DESTDIR)$(PREFIX)/bin/st-xterm
 	chmod 755 $(DESTDIR)$(PREFIX)/bin/st-copyout
 	chmod 755 $(DESTDIR)$(PREFIX)/bin/st-urlhandler
 	mkdir -p $(DESTDIR)$(MANPREFIX)/man1
@@ -61,7 +55,6 @@ install: st st-xterm
 
 uninstall:
 	rm -f $(DESTDIR)$(PREFIX)/bin/st
-	rm -f $(DESTDIR)$(PREFIX)/bin/st-xterm
 	rm -f $(DESTDIR)$(PREFIX)/bin/st-copyout
 	rm -f $(DESTDIR)$(PREFIX)/bin/st-urlhandler
 	rm -f $(DESTDIR)$(MANPREFIX)/man1/st.1
